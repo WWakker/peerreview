@@ -1,6 +1,6 @@
 v 3
 
-d peerreview: Randomly assign papers to peers for review
+d PEERREVIEW: Randomly assign papers to peers for review
 d Wouter Wakker
 d peerreview randomly assigns papers to peers for review, based on the principle 
 d of assignment without replacement which ensures that each paper is assigned an 
