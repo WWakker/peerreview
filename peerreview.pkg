@@ -1,7 +1,6 @@
 v 3
 
-d PEERREVIEW: Randomly assign papers to peers for review
-d Wouter Wakker
+d 'PEERREVIEW': Randomly assign papers to peers for review
 d peerreview randomly assigns papers to peers for review, based on the principle 
 d of assignment without replacement which ensures that each paper is assigned an 
 d equal number of times.
@@ -9,8 +8,11 @@ d peerreview can be useful for teachers who want their students to review a
 d specified number of papers of their classmates, randomly assigned amongst 
 d them.
 d 
+d Requires: Stata version 10.0
+d
 d Distribution-Date: 20200408
 d 
-d Support: wouter.wakker@outlook.com
+d Author: Wouter Wakker
+d Contact: wouter.wakker@outlook.com
 f peerreview.ado
 f peerreview.sthlp
