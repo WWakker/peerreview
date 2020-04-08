@@ -1,5 +1,5 @@
 {smcl}
-{* *! version 1.0.0  06apr2020}{...}
+{* *! version 1.0.0  08apr2020}{...}
 {viewerjumpto "Syntax" "peerreview##syntax"}{...}
 {viewerjumpto "Description" "peerreview##description"}{...}
 {viewerjumpto "Options" "peerreview##options"}{...}
@@ -65,7 +65,7 @@ variables containing the papers assigned to the reviewers.
 If a {it:varname} is given, {cmd:peerreview} will take the values of {it:varname}
 and randomly assign them {it:p} time(s). Alternatively, the {opt number} option may be specified. In this case, 
 {cmd:peerreview} will not take the values of {it:varname}, but instead assigns a number from 1 to the number of observations 
-and does the assignment based on these numbers.
+and does the assignment based on these numbers. This can be useful when there are duplicate observations in {it:varname}.
 
 
 {marker options}{...}
@@ -83,7 +83,7 @@ and does the assignment based on these numbers.
 {opt clear} clears data in memory before execution; must be specified if data in memory has changed
 
 {phang}
-{opth number(newvar)} generates new variable with distinct number from 1 to the number of observations use these values for assignment
+{opth number(newvar)} generates new variable with distinct number from 1 to the number of observations and use these values for assignment
 
 {dlgtab:name_suboption}
 
