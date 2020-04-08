@@ -1,0 +1,6 @@
+v 3
+
+d peerreview
+d Wouter Wakker
+
+p peerreview randomly assign papers to peers for review

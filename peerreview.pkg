@@ -1,0 +1,16 @@
+v 3
+
+d peerreview. Randomly assign papers to peers for review
+d Wouter Wakker
+d peerreview randomly assigns papers to peers for review, based on the principle 
+d of assignment without replacement which ensures that each paper is assigned an 
+d equal number of times.
+d peerreview can be useful for teachers who want their students to review a 
+d specified number of papers of their classmates, randomly assigned amongst 
+d them.
+d 
+d Distribution-Date: 20200408
+d 
+d Support: wouter.wakker@outlook.com
+f peerreview.ado
+f peerreview.sthlp
