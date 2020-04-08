@@ -4,4 +4,4 @@
 
 `peerreview` can be useful for teachers who want their students to review a specified number of papers of their classmates, randomly assigned amongst them.
 
-The minimum required version of Stata is 10.0.
+The minimum required version of Stata is 10.0. Another requirement is Ben Jann's moremata package, downloadable from SSC.
