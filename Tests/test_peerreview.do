@@ -1,7 +1,7 @@
 // Set seed
 local startseed = 1234
 
-log using test_v1_0_0_startseed`startseed', replace text nomsg
+log using test_v1_0_startseed`startseed', replace text nomsg
 
 di "Compare means to expectations of 2000 outcomes of peerreview using different seeds"
 di "Startseed = `startseed'"
