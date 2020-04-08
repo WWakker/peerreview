@@ -1,5 +1,5 @@
 {smcl}
-{* *! version 1.0.0  08apr2020}{...}
+{* *! version 1.0  08apr2020}{...}
 {viewerjumpto "Syntax" "peerreview##syntax"}{...}
 {viewerjumpto "Description" "peerreview##description"}{...}
 {viewerjumpto "Options" "peerreview##options"}{...}
