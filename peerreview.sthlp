@@ -65,7 +65,7 @@ variables containing the papers assigned to the reviewers.
 If a {it:varname} is given, {cmd:peerreview} will take the values of {it:varname}
 and randomly assign them {it:p} time(s). Alternatively, the {opt number} option may be specified. In this case, 
 {cmd:peerreview} will not take the values of {it:varname}, but instead assigns a number from 1 to the number of observations 
-and does the assignment based on these numbers. This can be useful when there are duplicate observations in {it:varname}.
+and does the assignment based on these numbers. This can be useful when there are duplicate values in {it:varname}.
 
 
 {marker options}{...}
