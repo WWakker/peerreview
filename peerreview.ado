@@ -1,18 +1,24 @@
-*! 1.0.0                06apr2020
+*! 1.0                  08apr2020
 *! Wouter Wakker     	wouter.wakker@outlook.com
 program define peerreview
-	version 10
+	version 10.0
+	
+	capt mata mata which mm_invtokens()
+    if _rc {
+        di as error "mm_invtokens() from -moremata- is required; type {stata ssc install moremata}"
+        exit 499
+    }
 	
 	capture syntax varname
 	if _rc == 100 {
 		syntax , Reviewers(string) Papers(string) [CLEAR]
 		
-		parse_gen_opt `reviewers'
+		parse_name_opt `reviewers'
 		local reviewers `s(integer)'
 		local var_reviewer `s(newvarname)'
 		if "`var_reviewer'" == "" local var_reviewer "reviewer" // Default value
 		
-		parse_gen_opt `papers'
+		parse_name_opt `papers'
 		local papers `s(integer)'
 		local var_papers `s(newvarname)'
 		if "`var_papers'" == "" local var_papers "review" // Default value
@@ -24,7 +30,7 @@ program define peerreview
 	else {
 		syntax varname, Papers(string) [NUMber(name)]
 		
-		parse_gen_opt `papers'
+		parse_name_opt `papers'
 		local papers `s(integer)'
 		local var_papers `s(newvarname)'
 		if "`var_papers'" == "" local var_papers "review" // Default value
@@ -45,6 +51,7 @@ program define peerreview
 		}
 	}
 	
+	// Argument conditions
 	if "`var_papers'" == "`var_reviewer'" {
 		di as error "Define different names for reviewer and paper variables"
 		exit 110
@@ -55,7 +62,7 @@ program define peerreview
 		if `r(r)' != `=_N' & "`number'" == "" {
 			di as error "Duplicate or missing values in variable {bf:`varlist'}"
 			di "Possible solution: assign unique number to variable {bf:`varlist'} by specifying the {it:number()} option"
-			exit
+			exit 499
 			}
 	}
 
@@ -73,7 +80,8 @@ program define peerreview
 		di as error "Number of papers to review must be smaller than number of reviewers"
 		exit 119
 	}
-
+	
+	// Prepare data dependent on syntax
 	if `syntax1' {
 		qui describe
 		if r(changed) == 1 {
@@ -86,6 +94,7 @@ program define peerreview
 		qui set obs `reviewers'
 	}
 	
+	// Create list or papers based on varname
 	if `isvar' {
 		if !`isstring' {
 			qui levelsof `varlist', local(levels) clean
@@ -100,6 +109,7 @@ program define peerreview
 			}
 		}
 	}
+	// Check whether variables to be created don't yet exist
 	else {
 		confirm new variable `var_reviewer'
 		qui gen `var_reviewer' = _n
@@ -203,14 +213,11 @@ program define peerreview
 	di "Number of iterations: `iterations'"
 end
 
-program parse_gen_opt , sclass
-
-    version 10
+program parse_name_opt , sclass
+    version 10.0
     
-    syntax anything(id="integer") ///
-    [ , ///
-        Name(name) ///
-    ]
+    syntax anything(id="integer") [, Name(name)]
+	
 	confirm integer number `anything'
     
 	sreturn local integer `anything'
