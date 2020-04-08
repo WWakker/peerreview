@@ -37,7 +37,7 @@
 {synopt:{opt r:eviewers}}expects number of reviewers; integer{p_end}
 {synopt:{opt p:apers}}expects number of papers to be read per reviewer; integer{p_end}
 {synopt:{opt clear}}clears data in memory before execution{p_end}
-{synopt:{opth num:ber(newvar)}}generates new variable with distinct number for each individual{p_end}
+{synopt:{opth num:ber(newvar)}}generates new variable with distinct number for each observation{p_end}
 {synoptline}
 {syntab:name_suboption}
 {synopt:{opth n:ame(newvar)}}specifies name for new variable(s) to be generated{p_end}
@@ -83,7 +83,7 @@ and does the assignment based on these numbers. This can be useful when there ar
 {opt clear} clears data in memory before execution; must be specified if data in memory has changed
 
 {phang}
-{opth number(newvar)} generates new variable with distinct number from 1 to the number of observations and use these values for assignment
+{opth number(newvar)} generates new variable with distinct number from 1 to the number of observations and uses these values for assignment
 
 {dlgtab:name_suboption}
 
