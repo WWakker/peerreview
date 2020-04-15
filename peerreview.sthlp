@@ -30,7 +30,7 @@
 [{opth n:umber(newvar)}]
 
 
-{synoptset 30 tabbed}{...}
+{synoptset 32 tabbed}{...}
 {synopthdr}
 {synoptline}
 {syntab:Main}
