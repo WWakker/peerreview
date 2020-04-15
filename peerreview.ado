@@ -1,4 +1,4 @@
-*! 1.0                  08apr2020
+*! 1.0.0                15apr2020
 *! Wouter Wakker     	wouter.wakker@outlook.com
 program define peerreview
 	version 10.0
@@ -94,7 +94,7 @@ program define peerreview
 		qui set obs `reviewers'
 	}
 	
-	// Create list or papers based on varname
+	// Create list of papers based on varname
 	if `isvar' {
 		if !`isstring' {
 			qui levelsof `varlist', local(levels) clean
@@ -213,7 +213,9 @@ program define peerreview
 	di "Number of iterations: `iterations'"
 end
 
-program parse_name_opt , sclass
+// Parser for options with name suboption
+cap program drop parse_name_opt
+program parse_name_opt, sclass
     version 10.0
     
     syntax anything(id="integer") [, Name(name)]
