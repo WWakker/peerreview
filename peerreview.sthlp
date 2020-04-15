@@ -27,7 +27,7 @@
 {cmd:peerreview} {varname}
 {cmd:,} 
 {cmdab:p:apers(}{it:#} [{cmd:,} {it:name_suboption}]{cmd:)}
-[{opth n:umber(newvar)}]
+[{opth num:ber(newvar)}]
 
 
 {synoptset 32 tabbed}{...}
