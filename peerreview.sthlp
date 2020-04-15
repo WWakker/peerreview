@@ -45,7 +45,6 @@
 {p2colreset}{...}
 
 
-
 {marker description}{...}
 {title:Description}
 
@@ -114,6 +113,7 @@ and does the assignment based on these numbers. This can be useful when there ar
 {phang}{cmd:  5. end}{p_end}
 {phang}{cmd:. set seed 1122}{p_end}
 {phang}{cmd:. peerreview student, p(2)}{p_end}
+
 
 {marker author}{...}
 {title:Author}
