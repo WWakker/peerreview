@@ -74,10 +74,10 @@ and does the assignment based on these numbers. This can be useful when there ar
 {dlgtab:Main}
 
 {phang}
-{opt reviewers} expects number of reviewers; integer
+{cmd:reviewers(}{it:#} [{cmd:,} {it:name_suboption}]{cmd:)} expects number of reviewers; integer
 
 {phang}
-{opt papers} expects number of papers to be read per reviewer; integer
+{cmd:papers(}{it:#} [{cmd:,} {it:name_suboption}]{cmd:)} expects number of papers to be read per reviewer; integer
 
 {phang}
 {opt clear} clears data in memory before execution; must be specified if data in memory has changed
