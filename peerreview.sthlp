@@ -34,8 +34,8 @@
 {synopthdr}
 {synoptline}
 {syntab:Main}
-{synopt:{opt r:eviewers}}expects number of reviewers; integer{p_end}
-{synopt:{opt p:apers}}expects number of papers to be read per reviewer; integer{p_end}
+{synopt:{cmdab:r:eviewers(}{it:#} [{cmd:,} {it:name_suboption}]{cmd:)}}expects number of reviewers; integer{p_end}
+{synopt:{cmdab:p:apers(}{it:#} [{cmd:,} {it:name_suboption}]{cmd:)}}expects number of papers to be read per reviewer; integer{p_end}
 {synopt:{opt clear}}clears data in memory before execution{p_end}
 {synopt:{opth num:ber(newvar)}}generates new variable with distinct number for each observation{p_end}
 {synoptline}
