@@ -8,7 +8,7 @@
 ## Installation
 To install, type in Stata:
 ```Stata
-net install peerreview, from(https://raw.githubusercontent.com/WWakker/peerreview/master)
+ssc install peerreview, replace
 ```
 
 ## Requirements
