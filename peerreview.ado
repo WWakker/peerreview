@@ -37,7 +37,7 @@ program define peerreview
 		parse_name_opt `papers'
 		local papers `s(integer)'
 		local var_papers `s(newvarname)'
-		if "`var_papers'" == "" local var_papers "review" // Default value
+		if "`var_papers'" == "" local var_papers "review" // Default
 		
 		cap confirm string variable `varlist'
 		if _rc local isstring 0
