@@ -1,8 +1,8 @@
 *! 1.0.1                15apr2020
 *! Wouter Wakker     	wouter.wakker@outlook.com
 
-* 1.0.1   30jun2020     aesthetic changes
-* 1.0.0   15apr2020     born
+* 1.0.1     30jun2020   aesthetic changes
+* 1.0.0     15apr2020   born
 
 program define peerreview
 	version 10.0
