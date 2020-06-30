@@ -6,9 +6,13 @@
 `peerreview` can be useful for teachers who want their students to review a specified number of papers of their classmates, randomly assigned amongst them.
 
 ## Installation
-To install, type in Stata:
+To install from SSC, type in Stata:
 ```Stata
 ssc install peerreview, replace
+```
+To install from GitHub, type in Stata:
+```Stata
+net install peerreview, from(https://raw.githubusercontent.com/WWakker/peerreview/master/) replace
 ```
 
 ## Requirements
