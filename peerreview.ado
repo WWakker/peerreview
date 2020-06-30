@@ -1,13 +1,17 @@
-*! 1.0.0                15apr2020
+*! 1.0.1                15apr2020
 *! Wouter Wakker     	wouter.wakker@outlook.com
+
+* 1.0.1   30jun2020     aesthetic changes
+* 1.0.0   15apr2020     born
+
 program define peerreview
 	version 10.0
 	
 	capt mata mata which mm_invtokens()
-    if _rc {
-        di as error "mm_invtokens() from -moremata- is required; type {stata ssc install moremata}"
-        exit 499
-    }
+	if _rc {
+		di as error "mm_invtokens() from -moremata- is required; type {stata ssc install moremata}"
+		exit 499
+	}
 	
 	capture syntax varname
 	if _rc == 100 {
@@ -16,12 +20,12 @@ program define peerreview
 		parse_name_opt `reviewers'
 		local reviewers `s(integer)'
 		local var_reviewer `s(newvarname)'
-		if "`var_reviewer'" == "" local var_reviewer "reviewer" // Default value
+		if "`var_reviewer'" == "" local var_reviewer "reviewer" // Default 
 		
 		parse_name_opt `papers'
 		local papers `s(integer)'
 		local var_papers `s(newvarname)'
-		if "`var_papers'" == "" local var_papers "review" // Default value
+		if "`var_papers'" == "" local var_papers "review" // Default 
 		
 		local isvar 0
 		local isstring 0
@@ -63,7 +67,7 @@ program define peerreview
 			di as error "Duplicate or missing values in variable {bf:`varlist'}"
 			di "Possible solution: assign unique number to variable {bf:`varlist'} by specifying the {it:number()} option"
 			exit 499
-			}
+		}
 	}
 
 	if `papers' < 1 {
@@ -216,12 +220,12 @@ end
 // Parser for options with name suboption
 cap program drop parse_name_opt
 program parse_name_opt, sclass
-    version 10.0
+	version 10.0
     
-    syntax anything(id="integer") [, Name(name)]
+	syntax anything(id="integer") [, Name(name)]
 	
 	confirm integer number `anything'
     
 	sreturn local integer `anything'
-    sreturn local newvarname `name'
+	sreturn local newvarname `name'
 end
