@@ -1,5 +1,5 @@
 {smcl}
-{* *! version 1.0.0  15apr2020}{...}
+{* *! version 1.0.2  08dec2020}{...}
 {viewerjumpto "Syntax" "peerreview##syntax"}{...}
 {viewerjumpto "Description" "peerreview##description"}{...}
 {viewerjumpto "Options" "peerreview##options"}{...}
@@ -13,31 +13,17 @@
 {marker syntax}{...}
 {title:Syntax}
 
-{phang}Basic syntax{p_end}
-{p 8 16 2}
-{cmd:peerreview}
-{cmd:,} 
-{cmdab:r:eviewers(}{it:#} [{cmd:,} {it:name_suboption}]{cmd:)}
-{cmdab:p:apers(}{it:#} [{cmd:,} {it:name_suboption}]{cmd:)}
-[{opt clear}]
-
-
-{phang}Full syntax{p_end}
 {p 8 16 2}
 {cmd:peerreview} {varname}
 {cmd:,} 
-{cmdab:p:apers(}{it:#} [{cmd:,} {it:name_suboption}]{cmd:)}
-[{opth num:ber(newvar)}]
+{cmdab:r:eview(}{it:#} [{cmd:,} {it:name_suboption}]{cmd:)}
 
 
 {synoptset 32 tabbed}{...}
 {synopthdr}
 {synoptline}
 {syntab:Main}
-{synopt:{cmdab:r:eviewers(}{it:#} [{cmd:,} {it:name_suboption}]{cmd:)}}expects number of reviewers; integer{p_end}
-{synopt:{cmdab:p:apers(}{it:#} [{cmd:,} {it:name_suboption}]{cmd:)}}expects number of papers to be read per reviewer; integer{p_end}
-{synopt:{opt clear}}clears data in memory before execution{p_end}
-{synopt:{opth num:ber(newvar)}}generates new variable with distinct number for each observation{p_end}
+{synopt:{cmdab:r:eview(}{it:#} [{cmd:,} {it:name_suboption}]{cmd:)}}expects number of reviews; integer{p_end}
 {synoptline}
 {syntab:name_suboption}
 {synopt:{opth n:ame(newvar)}}specifies name for new variable(s) to be generated{p_end}
@@ -49,22 +35,11 @@
 {title:Description}
 
 {pstd}
-{cmd:peerreview} randomly assigns papers to peers for review, based on the principle of assignment without replacement which
-ensures that each paper is assigned an equal number of times. 
-
-{pstd}
-Assignment is carried out with two constraints: Reviewers cannot review their own paper and reviewers cannot read papers more than once.
-
-{pstd}
-There are two syntaxes. If no {it:varname} is given, {cmd:peerreview} will create a dataset from scratch for {it:n} 
-reviewers and {it:p} papers to be read per reviewer, generating a reviewer variable with numbers 1 to {it:n}, and {it:p}
-variables containing the papers assigned to the reviewers. 
-
-{pstd}
-If a {it:varname} is given, {cmd:peerreview} will take the values of {it:varname}
-and randomly assign them {it:p} time(s). Alternatively, the {opt number} option may be specified. In this case, 
-{cmd:peerreview} will not take the values of {it:varname}, but instead assigns a number from 1 to the number of observations 
-and does the assignment based on these numbers. This can be useful when there are duplicate values in {it:varname}.
+{cmd:peerreview} randomly assigns papers to peers for review, based on the 
+principle of assignment without replacement which ensures that each paper is 
+assigned an equal number of times. Assignment is carried out with two 
+constraints: Reviewers cannot review their own paper and reviewers cannot 
+read papers more than once.
 
 
 {marker options}{...}
@@ -73,23 +48,13 @@ and does the assignment based on these numbers. This can be useful when there ar
 {dlgtab:Main}
 
 {phang}
-{cmd:reviewers(}{it:#} [{cmd:,} {it:name_suboption}]{cmd:)} expects number of reviewers; integer
-
-{phang}
-{cmd:papers(}{it:#} [{cmd:,} {it:name_suboption}]{cmd:)} expects number of papers to be read per reviewer; integer
-
-{phang}
-{opt clear} clears data in memory before execution; must be specified if data in memory has changed
-
-{phang}
-{opth number(newvar)} generates new variable with distinct number from 1 to the number of observations and uses these values for assignment
+{cmd:review(}{it:#} [{cmd:,} {it:name_suboption}]{cmd:)} expects number of reviews; integer
 
 {dlgtab:name_suboption}
 
 {phang}
 {opth name(newvar)} specifies name for new variable(s) to be generated
-{break}The default for {opt reviewers} is {it:reviewer}
-{break}The default for {opt papers} is {it:review#}, with {it:#} being 1 to {it:p} when {it:p} > 1
+{break}The default is {it:review#}
 
 
 {marker examples}{...}
