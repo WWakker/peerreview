@@ -1,49 +1,48 @@
-*! 1.0.2                08dec2020
+*! 1.1.0                10dec2020
 *! Wouter Wakker     	wouter.wakker@outlook.com
 
+* 1.1.0     10dec2020   byable
 * 1.0.2     08dec2020   simplified syntax; string variables are encoded first
 * 1.0.1     30jun2020   aesthetic changes
 * 1.0.0     15apr2020   born
 
-program define peerreview
+program peerreview, sortpreserve byable(onecall)
 	version 9.0
 	
 	// Syntax 
-	syntax varname, Review(string)
+	syntax varname [if] [in] , Review(string) [by(varlist)]
+	
+	// By prefix
+	if _by() {
+		if "`by'" != "" {
+			di as error "by prefix or by() option allowed, not both"
+			exit 198
+		}
+		else local by "`_byvars'"
+	}
+		
+	// Preserve the data
+	preserve
+	
+	// Sample to use
+	if "`if'`in'" != "" marksample touse, strok
+	else {
+		tempvar touse
+		qui gen byte `touse' = 1
+	}
+	
+	// Sort
+	if "`by'" != "" {
+		tempvar group
+		bysort `by' (`_sortindex'): gen long `group' = _n == 1
+		qui replace `group' = sum(`group')
+	}
 	
 	// Get number of reviews to be assigned and varname
 	parse_name_opt `review'
 	local reviews `s(integer)'
 	local var_reviews `s(newvarname)'
 	if "`var_reviews'" == "" local var_reviews "review" // Default
-	
-	// Store observations
-	local reviewers `=_N'
-
-	// Argument conditions
-	qui tab `varlist'
-	if `r(r)' != `=_N' & "`number'" == "" {
-		di as error "duplicate or missing values in variable {bf:`varlist'}"
-		exit 499
-	}
-
-	if `reviews' < 1 {
-		di as error "number of reviews must be at least 1"
-		exit 119
-	}
-	
-	if `reviewers' < 2 {
-		di as error "number of reviewers must be at least 2"
-		exit 119
-	}
-	
-	if `reviewers' <= `reviews' {
-		di as error "number of reviews must be smaller than number of reviewers"
-		exit 119
-	}
-	
-	// Preserve the data
-	preserve
 	
 	// Check if variable is string or numeric
 	cap confirm string variable `varlist'
@@ -53,14 +52,10 @@ program define peerreview
 	}
 	else {
 		local isstring 1
-		tempvar var_reviewer
-		encode `varlist', gen(`var_reviewer')
-	}
-	
-	// Create list of reviews based on varname
-	qui levelsof `varlist', local(levels) clean
-	forval i = 1/`reviews' {
-		local review_pool `review_pool' `levels'
+		if _byindex() == 1 {
+			tempvar var_reviewer
+			encode `varlist', gen(`var_reviewer')
+		}
 	}
 	
 	// Check if variables to be created exist already
@@ -80,37 +75,114 @@ program define peerreview
 			}
 		}
 	}
-
-	// Mata: create inlist conditions and reviewer/author combination matrix
-	mata {
-		rvws  = strtoreal(st_local("reviews"))
-		rvwrs = strtoreal(st_local("reviewers"))
-		
-		// Create empty matrices
-		inlist_mat = J(1, rvws, ".")
-		rev_auth_comb_mat = J(rvws * rvwrs, 2, .)
-		
-		row_nr = 1
-		for (i=1; i<=rvws; i++) {
-			// Create author/review combination matrix
-			for (j=1; j<=rvwrs; j++) {
-				rev_auth_comb_mat[row_nr, 1] = j
-				rev_auth_comb_mat[row_nr, 2] = i
-				row_nr++
-			}
-			// Create inlist conditions for inlist below (conditions are different for different number of reviews)
-			if (rvws == 1) {
-				if (`isstring') inlist_mat[i] = ", \``var_reviews''" + "[\`i']"
-				else inlist_mat[i] = ", `var_reviews'" + "[\`i']"
-			}
-			else {
-				if (`isstring') inlist_mat[i] = ", \``var_reviews'" + strofreal(i) + "'[\`i']"
-				else inlist_mat[i] = ", `var_reviews'" + strofreal(i) + "[\`i']"
+	
+	// Generate review variables
+	if `reviews' == 1 {
+		if `isstring' {
+			qui gen ``var_reviews'' = .
+		}
+		else {
+			qui gen `var_reviews' = . 
+		}		
+	}
+	else {
+		if `isstring' {
+			forval i = 1/`reviews' {
+				qui gen ``var_reviews'`i'' = .
 			}
 		}
-		st_local("inlist_cond", invtokens(inlist_mat))
+		else {
+			forval i = 1/`reviews' {
+				qui gen `var_reviews'`i' = .
+			}
+		}
 	}
-		
+	
+	// Assign
+	if "`by'" != "" {
+		tempvar touse_group
+		qui gen `touse_group' = .
+		qui levelsof `group' if `touse', local(groups)
+		if "`groups'" == "" error 2000
+		else {
+			foreach g of local groups {
+				qui replace `touse_group' = `touse' & `group' == `g'
+				peerreview_assign "`var_reviewer'" "`touse_group'" "`reviews'" "`isstring'" "`var_reviews'" "`var_reviews_label'" "`g'" "`_sortindex'" "`varlist'"
+			}
+		}
+	}
+	else peerreview_assign "`var_reviewer'" "`touse'" "`reviews'" "`isstring'" "`var_reviews'" "`var_reviews_label'" "" "`_sortindex'" "`varlist'"
+	
+	// Decode review variables if string
+	if `isstring' {
+		lab val `var_reviews_label' `var_reviewer'
+		if `reviews' == 1 decode ``var_reviews'', gen(`var_reviews')
+		else {
+			forval i = 1/`reviews' {
+				decode ``var_reviews'`i'', gen(`var_reviews'`i')
+			}
+		}
+	}
+	
+	restore, not
+end
+
+program peerreview_assign
+	version 9
+	
+	args var_reviewer touse reviews isstring var_reviews var_reviews_label group sortindex varlist
+	
+	// Sort
+	gsort -`touse' `sortindex'
+	
+	// Store observations
+	qui count if `touse'
+	local reviewers = r(N)
+	
+	// Argument conditions
+	qui tab `var_reviewer' if `touse'
+	if `r(r)' != `reviewers' {
+		di as error "duplicate values in variable {bf:`varlist'}"
+		exit 499
+	}
+
+	if `reviews' < 1 {
+		di as error "number of reviews must be at least 1"
+		exit 119
+	}
+	
+	if `reviewers' < 2 {
+		if `reviewers' == 0 error 2000
+		else {
+			di as error "number of reviewers must be at least 2"
+			exit 119
+		}
+	}
+	
+	if `reviewers' <= `reviews' {
+		di as error "number of reviews must be smaller than number of reviewers"
+		exit 119
+	}	
+	
+	// Create list of reviews based on varname
+	qui levelsof `var_reviewer' if `touse', local(levels)
+	forval i = 1/`reviews' {
+		local review_pool `review_pool' `levels'
+	}
+	
+	// Make sure tempvars are referenced correctly for string variables
+	if `isstring' {
+		if `reviews' == 1 local `var_reviews' `var_reviews_label'
+		else {
+			forval i = 1/`reviews' {
+				local `var_reviews'`i' `:word `i' of `var_reviews_label''
+			}
+		}
+	}
+
+	// Mata: create inlist conditions and reviewer/author combination matrix
+	tempname rvwrs_rvws_comb_mat
+	mata : peerreview_comb_mat(`reviewers', `reviews', `isstring')
 
 	// Shuffle list of reviews and assign to reviewers
 	// Reviews are put at the end of the list if one of the conditions is not satisfied
@@ -121,33 +193,27 @@ program define peerreview
 	while `counter' != `= `reviewers' * `reviews' + 1' { // Only false when succesfully assigned reviews to all reviewers
 		
 		// Randomize list of reviews and assignment order
-		mata : A = strofreal(jumble(rev_auth_comb_mat))
-		mata : st_local("reviewer_nr", invtokens(A[1...,1]'))
-		mata : st_local("author_nr", invtokens(A[1...,2]'))
-		mata : st_local("review_list", invtokens(jumble(A[1...,1]')))
+		mata : peerreview_shuffle_comb_mat("`rvwrs_rvws_comb_mat'")
+		mata : st_local("review_list", invtokens(jumble(tokens(st_local("review_pool"))')'))
 		
 		// Generate review variables
 		if `reviews' == 1 {
 			if `isstring' {
-				cap drop ``var_reviews''
-				qui gen ``var_reviews'' = .
+				qui replace ``var_reviews'' = . if `touse'
 			}
 			else {
-				cap drop `var_reviews'
-				qui gen `var_reviews' = . 
+				qui replace `var_reviews' = . if `touse'
 			}		
 		}
 		else {
 			if `isstring' {
 				forval i = 1/`reviews' {
-					cap drop ``var_reviews'`i''
-					qui gen ``var_reviews'`i'' = .
+					qui replace ``var_reviews'`i'' = . if `touse'
 				}
 			}
 			else {
 				forval i = 1/`reviews' {
-					cap drop `var_reviews'`i'
-					qui gen `var_reviews'`i' = .
+					qui replace `var_reviews'`i' = . if `touse'
 				}
 			}
 		}
@@ -185,20 +251,8 @@ program define peerreview
 		}
 	}
 	
-	// Decode review variables
-	if `isstring' {
-		lab val `var_reviews_label' `var_reviewer'
-		if `reviews' == 1 decode ``var_reviews'', gen(`var_reviews')
-		else {
-			forval i = 1/`reviews' {
-				decode ``var_reviews'`i'', gen(`var_reviews'`i')
-			}
-		}
-	}
-	
-	restore, not
-
-	di as txt "succesfully assigned; " as res `iterations' as txt " iteration(s)"
+	if "`group'" == "" di as txt "assigned succesfully; iterations: " as res `iterations'
+	else di as txt "-> group `group': assigned succesfully; iterations: " as res `iterations'
 end
 
 // Parser for options with name suboption
@@ -210,4 +264,48 @@ program parse_name_opt, sclass
     
 	sreturn local integer `anything'
 	sreturn local newvarname `name'
+end
+
+// Create reviewers/reviews combination matrix and inlist conditions
+version 9.0
+mata:
+void peerreview_comb_mat(real scalar rvwrs, real scalar rvws, real scalar isstring)
+{
+	// Create empty matrices
+	inlist_mat = J(1, rvws, ".")
+	rvwrs_rvws_comb_mat = J(rvws * rvwrs, 2, .)
+	
+	row_nr = 1
+	for (i=1; i<=rvws; i++) {
+		// Create reviewers/reviews combination matrix
+		for (j=1; j<=rvwrs; j++) {
+			rvwrs_rvws_comb_mat[row_nr, 1] = j
+			rvwrs_rvws_comb_mat[row_nr, 2] = i
+			row_nr++
+		}
+		// Create inlist conditions for inlist below (conditions are different for different number of reviews)
+		if (rvws == 1) {
+			if (isstring) inlist_mat[i] = ", \`\`var_reviews''" + "[\`i']"
+			else inlist_mat[i] = ", \`var_reviews'" + "[\`i']"
+		}
+		else {
+			if (isstring) inlist_mat[i] = ", \`\`var_reviews'" + strofreal(i) + "'[\`i']"
+			else inlist_mat[i] = ", \`var_reviews'" + strofreal(i) + "[\`i']"
+		}
+	}
+	
+	st_local("inlist_cond", invtokens(inlist_mat))
+	st_matrix(st_local("rvwrs_rvws_comb_mat"), rvwrs_rvws_comb_mat)
+}
+end
+
+// Shuffle reviewers/reviews combination matrix
+version 9.0
+mata:
+void peerreview_shuffle_comb_mat(string scalar matname)
+{
+	comb_mat = strofreal(jumble(st_matrix(matname)))
+	st_local("reviewer_nr", invtokens(comb_mat[1...,1]'))
+	st_local("author_nr", invtokens(comb_mat[1...,2]'))
+}
 end
