@@ -16,5 +16,4 @@ net install peerreview, from(https://raw.githubusercontent.com/WWakker/peerrevie
 ```
 
 ## Requirements
-* Stata 10.0 or higher
-* Ben Jann's moremata package, downloadable from SSC.
+* Stata 9.0 or higher
