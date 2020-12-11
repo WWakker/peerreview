@@ -1,5 +1,5 @@
 // Functionality tests peerreview
-
+discard
 clear all
 set obs 12
 gen student = _n

@@ -266,9 +266,10 @@ program parse_name_opt, sclass
 	sreturn local newvarname `name'
 end
 
-// Create reviewers/reviews combination matrix and inlist conditions
+// Mata functions
 version 9.0
 mata:
+// Create reviewers/reviews combination matrix and inlist conditions
 void peerreview_comb_mat(real scalar rvwrs, real scalar rvws, real scalar isstring)
 {
 	// Create empty matrices
@@ -297,11 +298,8 @@ void peerreview_comb_mat(real scalar rvwrs, real scalar rvws, real scalar isstri
 	st_local("inlist_cond", invtokens(inlist_mat))
 	st_matrix(st_local("rvwrs_rvws_comb_mat"), rvwrs_rvws_comb_mat)
 }
-end
 
 // Shuffle reviewers/reviews combination matrix
-version 9.0
-mata:
 void peerreview_shuffle_comb_mat(string scalar matname)
 {
 	comb_mat = strofreal(jumble(st_matrix(matname)))

@@ -14,7 +14,7 @@
 {title:Syntax}
 
 {p 8 16 2}
-{cmd:peerreview} {varname}
+{cmd:peerreview} {varname} {ifin}
 {cmd:,} 
 {cmdab:r:eview(}{it:#} [{cmd:,} {it:name_suboption}]{cmd:)}
 [{opth by(varlist)}]
