@@ -1,6 +1,7 @@
-*! 1.1.0                10dec2020
+*! 1.1.1                14dec2020
 *! Wouter Wakker     	wouter.wakker@outlook.com
 
+* 1.1.1     14dec2020   if in syntax documented
 * 1.1.0     10dec2020   byable
 * 1.0.2     08dec2020   simplified syntax; string variables are encoded first
 * 1.0.1     30jun2020   aesthetic changes
