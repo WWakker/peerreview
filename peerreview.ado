@@ -1,6 +1,7 @@
-*! 1.1.1                14dec2020
+*! 1.1.2                27dec2020
 *! Wouter Wakker     	wouter.wakker@outlook.com
 
+* 1.1.2     27dec2020   in not allowed with by
 * 1.1.1     14dec2020   if in syntax documented
 * 1.1.0     10dec2020   byable
 * 1.0.2     08dec2020   simplified syntax; string variables are encoded first
@@ -12,6 +13,12 @@ program peerreview, sortpreserve byable(onecall)
 	
 	// Syntax 
 	syntax varname [if] [in] , Review(string) [by(varlist)]
+	
+	// In not allowed with by
+	if "`by'" != "" & "`in'" != "" {
+		di as error "'in' may not be combined with 'by'"
+		exit 190
+	}
 	
 	// By prefix
 	if _by() {
