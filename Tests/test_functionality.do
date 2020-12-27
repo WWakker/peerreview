@@ -43,7 +43,7 @@ restore
 
 preserve
 cap peerreview student if group == 3 in 1/5, r(2, name(paper)) by(group)
-assert _rc == 2000
+assert _rc == 190
 restore
 
 preserve
@@ -108,7 +108,7 @@ restore
 
 preserve
 cap peerreview student if group == 3 in 1/5, r(2, name(paper)) by(group)
-assert _rc == 2000
+assert _rc == 190
 restore
 
 preserve
